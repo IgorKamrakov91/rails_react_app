@@ -1,5 +1,5 @@
-coefficient = {
-1:1, 2: .943, 3: .906, 4: .881, 5: .851,6: .831,7: .807,8: .786,9: .765, 10: .744
+coefficients = {
+  1: 1, 2: .943, 3: .906, 4: .881, 5: .851, 6: .831, 7: .807, 8: .786, 9: .765, 10: .744
 }
 @LiftForm = React.createClass
   getInitialState: ->
@@ -8,26 +8,26 @@ coefficient = {
     ismetric: false
     weightlifted: ''
     repsperformed: ''
-    onerm: ''
-  calculateOneRm: ->
-    if @state.weightlifted and @state.repsperformed
-      @state.onerm = @state.weightlifted / coefficient[@state.repsperformed]
-    else
-      0
+    onerm: '0'
   handleValueChange: (e) ->
     valueName = e.target.name
-    @setState "#{valueName}":e.target.value
+    @setState "#{ valueName }": e.target.value
   toggleUnit: (e) ->
     e.preventDefault()
     @setState ismetric: !@state.ismetric
-  valid : ->
+  calculateOneRm: ->
+    if @state.weightlifted and @state.repsperformed
+        @state.onerm = @state.weightlifted / coefficients[@state.repsperformed]
+    else
+      0
+  valid: ->
     @state.date && @state.liftname && @state.weightlifted && @state.repsperformed && @state.onerm
   handleSubmit: (e) ->
     e.preventDefault()
     $.post '', { lift: @state }, (data) =>
       @props.handleNewLift data
       @setState @getInitialState()
-    ,  'JSON'
+    , 'JSON'
   render: ->
     React.DOM.form
       className: 'form-inline'
@@ -70,7 +70,7 @@ coefficient = {
           name: 'repsperformed'
           value: @state.repsperformed
           onChange: @handleValueChange
-      React.DOM.a
+      React.DOM.button
         className: 'btn btn-primary'
         onClick: @toggleUnit
         'Metric = ' + @state.ismetric.toString()
